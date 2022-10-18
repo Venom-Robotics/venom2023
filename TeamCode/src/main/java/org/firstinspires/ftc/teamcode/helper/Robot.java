@@ -1,15 +1,28 @@
 package org.firstinspires.ftc.teamcode.helper;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.lynx.commands.core.LynxResetMotorEncoderCommand;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.util.List;
 
 /** Class that Declares and Initializes Robot Motors to Simplify Access */
 public class Robot
 {
     // Constants
-    public final int DRIVETRAIN_ENCODER_TICKS = 700; // UNTESTED
-    public final int JOINT_ENCODER_TICKS = 4000;
+    public final int DRIVETRAIN_ENCODER_TICKS = 766;
+    public final int JOINT_ENCODER_TICKS = 4007;
     public final double BONE1_LENGTH = 312;
     public final double BONE2_LENGTH = 406.4;
     public final double ARM_LENGTH = BONE1_LENGTH + BONE2_LENGTH;
@@ -23,13 +36,15 @@ public class Robot
     public DcMotor bottomRightMotor = null;
 
     // Declare Manipulator Motors
-    public DcMotor jointAMotor = null;
-    public DcMotor jointBMotor = null;
-    public DcMotor clawMotor = null;
+    public DcMotorEx jointAMotor = null;
+    public DcMotorEx jointBMotor = null;
+    public DcMotorEx clawMotor = null;
 
     // Declare Manipulator Servos
-    public Servo clawServo = null;
-    public Servo rotationServo = null;
+    public ServoImplEx clawServo = null;
+    public ServoImplEx rotationServo = null;
+
+    public BNO055IMU imu = null;
 
     // Create HardwareMap
     HardwareMap hwMap = null;
@@ -44,13 +59,23 @@ public class Robot
         topRightMotor = hwMap.get(DcMotor.class, "front_right_motor");
         bottomLeftMotor = hwMap.get(DcMotor.class, "back_left_motor");
         bottomRightMotor = hwMap.get(DcMotor.class, "back_right_motor");
-        jointAMotor = hwMap.get(DcMotor.class, "joint_a_motor");
-        jointBMotor = hwMap.get(DcMotor.class, "joint_b_motor");
-        clawMotor = hwMap.get(DcMotor.class, "claw_motor");
+        jointAMotor = hwMap.get(DcMotorEx.class, "joint_a_motor");
+        jointBMotor = hwMap.get(DcMotorEx.class, "joint_b_motor");
+        clawMotor = hwMap.get(DcMotorEx.class, "claw_motor");
+
+        // Set Hubs to Bulk Read
+        List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
         // Define and Initialize Servos
-        clawServo = hwMap.get(Servo.class, "claw_servo");
-        rotationServo = hwMap.get(Servo.class, "rotation_servo");
+        clawServo = hwMap.get(ServoImplEx.class, "claw_servo");
+        rotationServo = hwMap.get(ServoImplEx.class, "rotation_servo");
+
+        // Widen Servo Ranges
+        clawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        rotationServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         // Set Motor Directions
         topLeftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -89,9 +114,10 @@ public class Robot
         topRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        clawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        jointAMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jointBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        clawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
 
 }
