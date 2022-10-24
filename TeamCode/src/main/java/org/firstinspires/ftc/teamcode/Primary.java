@@ -103,9 +103,9 @@ public class Primary extends OpMode
 
         // Claw Servo
         if (gamepad2.left_bumper) {
-            robot.clawServo.setPower(0.5);
+            robot.clawServo.setPower(1);
         } else if (gamepad2.right_bumper) {
-            robot.clawServo.setPower(-0.5);
+            robot.clawServo.setPower(-1);
         } else {
             robot.clawServo.setPower(0);
         }
