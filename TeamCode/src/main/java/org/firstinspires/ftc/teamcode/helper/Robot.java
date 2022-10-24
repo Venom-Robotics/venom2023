@@ -1,19 +1,13 @@
 package org.firstinspires.ftc.teamcode.helper;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.lynx.commands.core.LynxResetMotorEncoderCommand;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.List;
 
@@ -41,18 +35,18 @@ public class Robot
     public DcMotorEx clawMotor = null;
 
     // Declare Manipulator Servos
-    public ServoImplEx clawServo = null;
-    public ServoImplEx rotationServo = null;
+    public CRServo clawServo = null;
+    public CRServo rotationServo = null;
 
-    public BNO055IMU imu = null;
+    public List<LynxModule> allHubs = null;
 
     // Create HardwareMap
     HardwareMap hwMap = null;
 
     // Initialize standard Hardware interfaces
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap _hardwareMap) {
         // Save Reference to Hardware Map
-        hwMap = ahwMap;
+        hwMap = _hardwareMap;
 
         // Define and Initialize Motors
         topLeftMotor = hwMap.get(DcMotor.class, "front_left_motor");
@@ -64,18 +58,20 @@ public class Robot
         clawMotor = hwMap.get(DcMotorEx.class, "claw_motor");
 
         // Set Hubs to Bulk Read
-        List<LynxModule> allHubs = hwMap.getAll(LynxModule.class);
+        allHubs = hwMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+            // Set Hub Color to White
+            hub.setConstant(0xFFFFFF);
         }
 
         // Define and Initialize Servos
-        clawServo = hwMap.get(ServoImplEx.class, "claw_servo");
-        rotationServo = hwMap.get(ServoImplEx.class, "rotation_servo");
+        clawServo = hwMap.get(CRServo.class, "claw_servo");
+        rotationServo = hwMap.get(CRServo.class, "rotation_servo");
 
         // Widen Servo Ranges
-        clawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        rotationServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
+//        clawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
+//        rotationServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         // Set Motor Directions
         topLeftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -114,9 +110,9 @@ public class Robot
         topRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        jointAMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        jointBMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        clawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jointAMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        jointBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 

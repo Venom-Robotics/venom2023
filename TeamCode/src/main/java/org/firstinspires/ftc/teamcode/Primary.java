@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.lynx.commands.core.LynxResetMotorEncoderCommand;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.helper.Robot;
@@ -62,6 +60,12 @@ public class Primary extends OpMode
     // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
+        int tl = robot.topLeftMotor.getCurrentPosition();
+        int tr = robot.topRightMotor.getCurrentPosition();
+        int bl = robot.bottomLeftMotor.getCurrentPosition();
+        int br = robot.bottomRightMotor.getCurrentPosition();
+        int Apos = robot.jointAMotor.getCurrentPosition();
+        int Bpos = robot.jointBMotor.getCurrentPosition();
         //  ------Controller 1------
 
         // Drivetrain
@@ -91,33 +95,25 @@ public class Primary extends OpMode
 
         //  ------Controller 2------
         // Arm
-        int Apos = robot.jointAMotor.getCurrentPosition();
-        int Bpos = robot.jointBMotor.getCurrentPosition();
-
-        if ((Apos != (int) (Apos + -gamepad2.left_stick_y * 10)) || (Bpos != (int) (Bpos + -gamepad2.right_stick_y * 10))) {
-            telemetry.addLine("armIsMoving");
-            robot.jointAMotor.setTargetPosition((int) (Apos + -gamepad2.left_stick_y * 10));
-            robot.jointBMotor.setTargetPosition((int) (Bpos + -gamepad2.right_stick_y * 10));
-
-            robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            robot.jointAMotor.setVelocity(200);
-            robot.jointBMotor.setVelocity(200);
-        }
+        robot.jointAMotor.setPower(-gamepad2.left_stick_y/2 + 0.1);
+        robot.jointBMotor.setPower(gamepad2.right_stick_y/2 - 0.1);
 
         // Claw Motor
-        robot.clawMotor.setPower(gamepad2.left_trigger + -gamepad2.right_trigger);
+        robot.clawMotor.setPower(gamepad2.left_trigger/4 + -gamepad2.right_trigger/4);
 
         // Claw Servo
         if (gamepad2.left_bumper) {
-            robot.clawServo.setPosition(0);
+            robot.clawServo.setPower(0.5);
         } else if (gamepad2.right_bumper) {
-            robot.clawServo.setPosition(1);
-        }
+            robot.clawServo.setPower(-0.5);
+        };
 
         // Rotation Servo
-        // 🤷
+        if (gamepad2.dpad_up) {
+            robot.rotationServo.setPower(0.5);
+        } else if (gamepad2.dpad_down) {
+            robot.rotationServo.setPower(-0.5);
+        };
 
         // Assign Calculated Values to Motors
         robot.topLeftMotor.setPower(topLeftPower);
@@ -129,11 +125,12 @@ public class Primary extends OpMode
         telemetry.addData("Status", "Running...");
         telemetry.addLine(String.format("Top Left (%.2f) Top Right (%.2f)\nBottom Left (%.2f) Bottom Right (%.2f)",
                 topLeftPower, topRightPower, bottomLeftPower, bottomRightPower));
-        telemetry.addData("0", robot.topLeftMotor.getCurrentPosition());
-        telemetry.addData("1", robot.topRightMotor.getCurrentPosition());
-        telemetry.addData("2", robot.bottomLeftMotor.getCurrentPosition());
-        telemetry.addData("3", robot.bottomRightMotor.getCurrentPosition());
-        telemetry.addData("range", robot.clawServo.getPwmRange());
+        telemetry.addData("0", tl);
+        telemetry.addData("1", tr);
+        telemetry.addData("2", bl);
+        telemetry.addData("3", br);
+        telemetry.addData("a", Apos);
+        telemetry.addData("b", Bpos);
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 //        telemetry.update(); // Automatically Updates Once Per Loop? https://gm0.org/en/latest/docs/software/tutorials/using-telemetry.html#updating-telemetry

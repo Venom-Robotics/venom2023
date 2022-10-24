@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -52,24 +51,24 @@ public class Auto extends LinearOpMode
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 750 ;   // eg: GoBILDA 312 RPM Yellow Jacket
+    static final double     COUNTS_PER_MOTOR_REV    = 766.106508876 ;   // eg: GoBILDA 312 RPM Yellow Jacket
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 2.95276 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    // These constants define the desired driving/control characteristics
+    // These constants dfine the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Max driving speed for better distance accuracy.
-    static final double     TURN_SPEED              = 0.4;     // Max Turn speed to limit turn rate
+    static final double     DRIVE_SPEED             = 0.9;     // Max driving speed for better distance accuracy.
+    static final double     TURN_SPEED              = 0.8;     // Max Turn speed to limit turn rate
     static final double     HEADING_THRESHOLD       = 1.0 ;    // How close must the heading get to the target before moving to next step.
     // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
     // Define the Proportional control coefficient (or GAIN) for "heading control".
     // We define one value when Turning (larger errors), and the other is used when Driving straight (smaller errors).
     // Increase these numbers if the heading does not corrects strongly enough (eg: a heavy robot or using tracks)
     // Decrease these numbers if the heading does not settle on the correct value (eg: very agile robot with omni wheels)
-    static final double     P_TURN_GAIN            = 0.02;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_GAIN           = 0.03;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_GAIN            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_GAIN           = 0.15;     // Larger is more responsive, but also less stable
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -134,8 +133,6 @@ public class Auto extends LinearOpMode
             }
         });
 
-
-
         telemetry.setMsTransmissionInterval(50);
 
         /*
@@ -167,6 +164,8 @@ public class Auto extends LinearOpMode
          * during the init loop.
          */
 
+        camera.closeCameraDevice();
+
         // Set the encoders for closed loop speed control, and reset the heading.
         topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -178,26 +177,26 @@ public class Auto extends LinearOpMode
         telemetry.addData("Tag Found", tagOfInterest.id);
         telemetry.update();
 
-        driveStraight(DRIVE_SPEED, 4, 0.0);
-
-        turnToHeading(TURN_SPEED, -45.0);
-        holdHeading(TURN_SPEED, -45.0, 0.5);
-
-        driveStraight(DRIVE_SPEED, 24.0, 0.0);
-
-        turnToHeading(TURN_SPEED, 0.0);
-        holdHeading(TURN_SPEED, 0.0, 0.5);
+        driveStraight(DRIVE_SPEED, 26, 0);
+        holdHeading(TURN_SPEED, 0, 0.5);
 
 
         switch (tagOfInterest.id) {
             case TAG_1:
-                telemetry.addData("Doing Shit", TAG_1);
+                turnToHeading(TURN_SPEED, 90);
+                holdHeading(TURN_SPEED, 90, 0.5);
+
+                driveStraight(DRIVE_SPEED, 20, 90);
+                holdHeading(TURN_SPEED, 90, 0.5);
                 break;
             case TAG_2:
-                telemetry.addData("Doing Shit", TAG_2);
                 break;
             case TAG_3:
-                telemetry.addData("Doing Shit", TAG_3);
+                turnToHeading(TURN_SPEED, -90);
+                holdHeading(TURN_SPEED, -90, 0.5);
+
+                driveStraight(DRIVE_SPEED, 20, -90);
+                holdHeading(TURN_SPEED, -90, 0.5);
                 break;
         }
 

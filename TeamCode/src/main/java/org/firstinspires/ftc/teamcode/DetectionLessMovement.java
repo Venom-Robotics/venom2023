@@ -14,53 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.helper.Robot;
 
-/**
- *  This file illustrates the concept of driving an autonomous path based on Gyro heading and encoder counts.
- *  The code is structured as a LinearOpMode
- *
- *  The path to be followed by the robot is built from a series of drive, turn or pause steps.
- *  Each step on the path is defined by a single function call, and these can be strung together in any order.
- *
- *  The code REQUIRES that you have encoders on the drive motors, otherwise you should use: RobotAutoDriveByTime;
- *
- *  This code ALSO requires that you have a BOSCH BNO055 IMU, otherwise you would use: RobotAutoDriveByEncoder;
- *  This IMU is found in REV Control/Expansion Hubs shipped prior to July 2022, and possibly also on later models.
- *  To run as written, the Control/Expansion hub should be mounted horizontally on a flat part of the robot chassis.
- *
- *  This sample requires that the drive Motors have been configured with names : left_drive and right_drive.
- *  It also requires that a positive power command moves both motors forward, and causes the encoders to count UP.
- *  So please verify that both of your motors move the robot forward on the first move.  If not, make the required correction.
- *  See the beginning of runOpMode() to set the FORWARD/REVERSE option for each motor.
- *
- *  This code uses RUN_TO_POSITION mode for driving straight, and RUN_USING_ENCODER mode for turning and holding.
- *  Note: You must call setTargetPosition() at least once before switching to RUN_TO_POSITION mode.
- *
- *  Notes:
- *
- *  All angles are referenced to the coordinate-frame that is set whenever resetHeading() is called.
- *  In this sample, the heading is reset when the Start button is touched on the Driver station.
- *  Note: It would be possible to reset the heading after each move, but this would accumulate steering errors.
- *
- *  The angle of movement/rotation is assumed to be a standardized rotation around the robot Z axis,
- *  which means that a Positive rotation is Counter Clockwise, looking down on the field.
- *  This is consistent with the FTC field coordinate conventions set out in the document:
- *  ftc_app\doc\tutorial\FTC_FieldCoordinateSystemDefinition.pdf
- *
- *  Control Approach.
- *
- *  To reach, or maintain a required heading, this code implements a basic Proportional Controller where:
- *
- *      Steering power = Heading Error * Proportional Gain.
- *
- *      "Heading Error" is calculated by taking the difference between the desired heading and the actual heading,
- *      and then "normalizing" it by converting it to a value in the +/- 180 degree range.
- *
- *      "Proportional Gain" is a constant that YOU choose to set the "strength" of the steering response.
- *
- *  Use Android Studio to Copy this Class, and Paste it into your "TeamCode" folder with a new name.
- *  Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
- */
-
 @Autonomous(name="Testing: DetectionLessMovement", group="Testing")
 public class DetectionLessMovement extends LinearOpMode {
 
@@ -83,6 +36,7 @@ public class DetectionLessMovement extends LinearOpMode {
     private double rightSpeed = 0;
     private int leftTarget = 0;
     private int rightTarget = 0;
+
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
     // For external drive gearing, set DRIVE_GEAR_REDUCTION as needed.
@@ -105,17 +59,19 @@ public class DetectionLessMovement extends LinearOpMode {
     // We define one value when Turning (larger errors), and the other is used when Driving straight (smaller errors).
     // Increase these numbers if the heading does not corrects strongly enough (eg: a heavy robot or using tracks)
     // Decrease these numbers if the heading does not settle on the correct value (eg: very agile robot with omni wheels)
-    static final double     P_TURN_GAIN            = 0.2;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_GAIN           = 0.3;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_GAIN            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_GAIN           = 0.15;     // Larger is more responsive, but also less stable
 
 
     @Override
     public void runOpMode() {
-
+        telemetry.addData(">", "Initializing...");
+        telemetry.update();
 
         Robot robot = new Robot();
         robot.init(hardwareMap);
 
+        // Shorthand
         topLeftMotor = robot.topLeftMotor;
         topRightMotor = robot.topRightMotor;
         bottomLeftMotor = robot.bottomLeftMotor;
@@ -165,16 +121,14 @@ public class DetectionLessMovement extends LinearOpMode {
 //
 //        driveStraight(DRIVE_SPEED,-48.0, 0.0);    // Drive in Reverse 48" (should return to approx. staring position)
 
-        driveStraight(DRIVE_SPEED, 4, 0.0);
+        driveStraight(DRIVE_SPEED, 26, 0);
+        holdHeading(TURN_SPEED, 0, 0.5);
 
-        turnToHeading(TURN_SPEED, -90.0);
-        holdHeading(TURN_SPEED, -90.0, 0.5);
+        turnToHeading(TURN_SPEED, 90);
+        holdHeading(TURN_SPEED, 90, 0.5);
 
-        driveStraight(DRIVE_SPEED, 24.0, 0.0);
-
-        turnToHeading(TURN_SPEED, 0.0);
-        holdHeading(TURN_SPEED, 0.0, 0.5);
-
+        driveStraight(DRIVE_SPEED, 20, 90);
+        holdHeading(TURN_SPEED, 90, 0.5);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
