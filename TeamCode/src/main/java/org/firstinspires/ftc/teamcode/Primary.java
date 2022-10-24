@@ -106,14 +106,18 @@ public class Primary extends OpMode
             robot.clawServo.setPower(0.5);
         } else if (gamepad2.right_bumper) {
             robot.clawServo.setPower(-0.5);
-        };
+        } else {
+            robot.clawServo.setPower(0);
+        }
 
         // Rotation Servo
         if (gamepad2.dpad_up) {
             robot.rotationServo.setPower(0.5);
         } else if (gamepad2.dpad_down) {
             robot.rotationServo.setPower(-0.5);
-        };
+        } else {
+            robot.rotationServo.setPower(0);
+        }
 
         // Assign Calculated Values to Motors
         robot.topLeftMotor.setPower(topLeftPower);
