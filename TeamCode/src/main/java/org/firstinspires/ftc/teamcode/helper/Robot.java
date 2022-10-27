@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.helper;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -35,8 +36,8 @@ public class Robot
     public DcMotorEx clawMotor = null;
 
     // Declare Manipulator Servos
-    public CRServo clawServo = null;
-    public CRServo rotationServo = null;
+    public CRServoImplEx clawServo = null;
+    public CRServoImplEx rotationServo = null;
 
     public List<LynxModule> allHubs = null;
 
@@ -66,8 +67,8 @@ public class Robot
         }
 
         // Define and Initialize Servos
-        clawServo = hwMap.get(CRServo.class, "claw_servo");
-        rotationServo = hwMap.get(CRServo.class, "rotation_servo");
+        clawServo = hwMap.get(CRServoImplEx.class, "claw_servo");
+        rotationServo = hwMap.get(CRServoImplEx.class, "rotation_servo");
 
         // Widen Servo Ranges
 //        clawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));

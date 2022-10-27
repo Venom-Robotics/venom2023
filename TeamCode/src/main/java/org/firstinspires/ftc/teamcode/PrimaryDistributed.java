@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.helper.Robot;
 
-@TeleOp(name="Primary")
-public class Primary extends OpMode
+@TeleOp(name="PrimaryDistributed")
+public class PrimaryDistributed extends OpMode
 {
     // Declare OpMode members
     Robot robot = new Robot(); // Instantiate Robot Class to Access Drive Motors
@@ -81,17 +81,17 @@ public class Primary extends OpMode
         double bottomLeftPower = leftStickY - halfLeftStickX - halfRightStickX;
         double bottomRightPower = rightStickY + halfLeftStickX + halfRightStickX;
         // Dpad Inputs
-        topLeftPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_right) ? 1: 0) + ((gamepad1.dpad_left) ? -1: 0);
-        topRightPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_left) ? 1: 0) + ((gamepad1.dpad_right) ? -1: 0);
-        bottomLeftPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_left) ? 1: 0) + ((gamepad1.dpad_right) ? -1: 0);
-        bottomRightPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_right) ? 1: 0) + ((gamepad1.dpad_left) ? -1: 0);
+//        topLeftPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_right) ? 1: 0) + ((gamepad1.dpad_left) ? -1: 0);
+//        topRightPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_left) ? 1: 0) + ((gamepad1.dpad_right) ? -1: 0);
+//        bottomLeftPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_left) ? 1: 0) + ((gamepad1.dpad_right) ? -1: 0);
+//        bottomRightPower += ((gamepad1.dpad_up) ? 1: 0) + ((gamepad1.dpad_down) ? -1: 0) + ((gamepad1.dpad_right) ? 1: 0) + ((gamepad1.dpad_left) ? -1: 0);
         // Trigger Rotation
-        if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-            topLeftPower += -0.2 - gamepad1.left_trigger + gamepad1.right_trigger;
-            topRightPower += -0.2 + gamepad1.left_trigger - gamepad1.right_trigger;
-            bottomLeftPower += -0.2 - gamepad1.left_trigger + gamepad1.right_trigger;
-            topRightPower += -0.2 + gamepad1.left_trigger - gamepad1.right_trigger;
-        }
+//        if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
+//            topLeftPower += -0.2 - gamepad1.left_trigger + gamepad1.right_trigger;
+//            topRightPower += -0.2 + gamepad1.left_trigger - gamepad1.right_trigger;
+//            bottomLeftPower += -0.2 - gamepad1.left_trigger + gamepad1.right_trigger;
+//            topRightPower += -0.2 + gamepad1.left_trigger - gamepad1.right_trigger;
+//        }
 
         //  ------Controller 2------
         // Arm
@@ -107,22 +107,22 @@ public class Primary extends OpMode
         }
 
         // Claw Motor
-        robot.clawMotor.setPower(gamepad2.left_trigger/3 + -gamepad2.right_trigger/3);
+        robot.clawMotor.setPower(gamepad1.left_trigger/3 + -gamepad1.right_trigger/3);
 
         // Claw Servo
-        if (gamepad2.left_bumper) {
+        if (gamepad1.left_bumper) {
             robot.clawServo.setPower(1);
-        } else if (gamepad2.right_bumper) {
+        } else if (gamepad1.right_bumper) {
             robot.clawServo.setPower(0);
         } else {
             robot.clawServo.setPower(1);
         }
 
         // Rotation Servo
-        if (gamepad2.dpad_left) {
+        if (gamepad1.dpad_left) {
             robot.rotationServo.setPwmEnable();
             robot.rotationServo.setPower(0);
-        } else if (gamepad2.dpad_right) {
+        } else if (gamepad1.dpad_right) {
             robot.rotationServo.setPwmEnable();
             robot.rotationServo.setPower(-1);
         } else {

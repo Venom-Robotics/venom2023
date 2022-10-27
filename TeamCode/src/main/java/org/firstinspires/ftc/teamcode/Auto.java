@@ -174,8 +174,15 @@ public class Auto extends LinearOpMode
         resetHeading();
 
         /* Actually do something useful */
-        telemetry.addData("Tag Found", tagOfInterest.id);
+        if (tagOfInterest != null) {
+            telemetry.addData("Tag Found", tagOfInterest.id);
+        } else {
+            telemetry.addLine("No Tag Found, Defaulting to Position 2 (Middle/id:164)");
+        }
         telemetry.update();
+
+        // Start Buffer
+        sleep(2000);
 
         driveStraight(DRIVE_SPEED, 26, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
@@ -198,12 +205,12 @@ public class Auto extends LinearOpMode
                 driveStraight(DRIVE_SPEED, 20, -90);
                 holdHeading(TURN_SPEED, -90, 0.5);
                 break;
+            default:
+                break;
         }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-
-        sleep(2000);
     }
 
     /*
