@@ -95,8 +95,8 @@ public class PrimaryDistributed extends OpMode
 
         //  ------Controller 2------
         // Arm
-        robot.jointAMotor.setPower(-gamepad2.left_stick_y/3);
-        robot.jointBMotor.setPower(gamepad2.right_stick_y/3);
+        robot.jointAMotor.setPower(-gamepad2.left_stick_y/2);
+        robot.jointBMotor.setPower(gamepad2.right_stick_y/2);
 
         if (gamepad1.a) {
             if (Bpos > -1800) {
