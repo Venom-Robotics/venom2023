@@ -196,8 +196,6 @@ public class Auto extends LinearOpMode
                 driveStraight(DRIVE_SPEED, 20, 90);
                 holdHeading(TURN_SPEED, 90, 0.5);
                 break;
-            case TAG_2:
-                break;
             case TAG_3:
                 turnToHeading(TURN_SPEED, -90);
                 holdHeading(TURN_SPEED, -90, 0.5);
@@ -221,6 +219,32 @@ public class Auto extends LinearOpMode
      */
 
     // **********  HIGH Level driving functions.  ********************
+
+    public void driveByRatio(double maxDriveSpeed, double y, int trInchUnit) {
+        double scale = 1 / (y + 1);
+        double yscale = y * scale;
+        int startPos = topRightMotor.getCurrentPosition();
+
+        topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        topRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        topLeftMotor.setPower((yscale - scale) * maxDriveSpeed);
+        topRightMotor.setPower((yscale + scale) * maxDriveSpeed);
+        bottomLeftMotor.setPower((yscale + scale) * maxDriveSpeed);
+        bottomRightMotor.setPower((yscale - scale) * maxDriveSpeed);
+
+        while (opModeIsActive() && topRightMotor.getCurrentPosition() < startPos + trInchUnit * COUNTS_PER_INCH) {
+            telemetry.addData("Moving by Scale", y);
+            telemetry.update();
+        }
+
+        topLeftMotor.setPower(0);
+        topRightMotor.setPower(0);
+        bottomLeftMotor.setPower(0);
+        bottomRightMotor.setPower(0);
+    }
 
     /**
      *  Method to drive in a straight line, on a fixed compass heading (angle), based on encoder counts.

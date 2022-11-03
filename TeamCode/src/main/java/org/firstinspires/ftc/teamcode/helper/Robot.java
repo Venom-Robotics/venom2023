@@ -16,13 +16,10 @@ import java.util.List;
 public class Robot
 {
     // Constants
-    public final int DRIVETRAIN_ENCODER_TICKS = 766;
-    public final int JOINT_ENCODER_TICKS = 4007;
+    public final double DRIVETRAIN_ENCODER_TICKS = 766.106508876;
+    public final double JOINT_ENCODER_TICKS = 4005.55;
     public final double BONE1_LENGTH = 312;
     public final double BONE2_LENGTH = 406.4;
-    public final double ARM_LENGTH = BONE1_LENGTH + BONE2_LENGTH;
-    public final int JOINT_A_SETUP_TICKS = 0;
-    public final int JOINT_B_SETUP_TICKS = 0;
 
     // Declare Drivetrain members
     public DcMotor topLeftMotor = null;
@@ -43,6 +40,10 @@ public class Robot
 
     // Create HardwareMap
     HardwareMap hwMap = null;
+
+    public enum Direction {
+        LEFT, RIGHT, NONE
+    }
 
     // Initialize standard Hardware interfaces
     public void init(HardwareMap _hardwareMap) {
