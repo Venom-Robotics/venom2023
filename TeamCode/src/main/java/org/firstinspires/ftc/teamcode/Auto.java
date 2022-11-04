@@ -184,7 +184,7 @@ public class Auto extends LinearOpMode
         // Start Buffer
         sleep(2000);
 
-        driveStraight(DRIVE_SPEED, 26, 0);
+        driveStraight(DRIVE_SPEED, 27, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
 

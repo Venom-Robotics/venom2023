@@ -94,6 +94,7 @@ public class Primary extends OpMode
                     break;
             }
             robot.rotationServo.setPwmDisable();
+            lastDirection = Robot.Direction.NONE;
         }
 
         // ------------------------
@@ -105,7 +106,7 @@ public class Primary extends OpMode
         robot.jointBMotor.setPower(gamepad2.right_stick_y/2 - 0.1);
 
         // Claw Motor
-        robot.clawMotor.setPower(-gamepad2.left_trigger/3 + gamepad2.right_trigger/2);
+        robot.clawMotor.setPower(-gamepad2.left_trigger/2 + gamepad2.right_trigger/2);
 
         // Driver Station Telemetry
         telemetry.addData("Status", "Running...");
