@@ -30,9 +30,6 @@ public class Primary extends OpMode
     @Override
     public void start() {
         runtime.reset();
-        // Inform the User that The Arm is Initializing
-        telemetry.addData("Status", "Initializing Arms...");
-        telemetry.update();
     }
 
     // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
