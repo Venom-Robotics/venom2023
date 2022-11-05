@@ -35,9 +35,9 @@ public class Primary extends OpMode
     // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
-        // ------------------------
-        // ----- Controller 1 -----
-        // ------------------------
+        // ------------------------------------------------------------------------
+        // ----- Controller 1 -----------------------------------------------------
+        // ------------------------------------------------------------------------
 
         // Drivetrain --------------------------------------
         // Calculate Movement for Each Wheel (and Discreetly Clamp Each Value to a Range of (-1.0, 1.0))
@@ -94,9 +94,9 @@ public class Primary extends OpMode
             lastDirection = Robot.Direction.NONE;
         }
 
-        // ------------------------
-        // ----- Controller 2 -----
-        // ------------------------
+        // ------------------------------------------------------------------------
+        // ----- Controller 2 -----------------------------------------------------
+        // ------------------------------------------------------------------------
 
         // Arm
         robot.jointAMotor.setPower(-gamepad2.left_stick_y/2 + 0.1);

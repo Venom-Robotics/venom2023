@@ -91,6 +91,7 @@ public class Auto extends LinearOpMode
     final int TAG_3 = 165; // Tag ID 63 from the 36h11 family
 
     AprilTagDetection tagOfInterest = null;
+    boolean detected = false;
 
     @Override
     public void runOpMode()
@@ -147,11 +148,16 @@ public class Auto extends LinearOpMode
             if(currentDetections.size() != 0)
             {
                 tagOfInterest = currentDetections.get(0);
+                detected = true;
                 telemetry.addLine(String.valueOf(tagOfInterest.id));
             }
             else
             {
-                telemetry.addLine("Don't see tag of interest :(");
+                if (detected) {
+                    telemetry.addLine("Tag Not in Immediate Line of Sight, but Detected in Past");
+                } else {
+                    telemetry.addLine("Tag Not in Immediate Line of Sight");
+                }
             }
             telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
 
@@ -182,7 +188,7 @@ public class Auto extends LinearOpMode
         telemetry.update();
 
         // Start Buffer
-        sleep(2000);
+        sleep(500);
 
         driveStraight(DRIVE_SPEED, 27, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
