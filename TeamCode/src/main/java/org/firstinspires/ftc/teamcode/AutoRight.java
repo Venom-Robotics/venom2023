@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Autonomous
-public class Auto extends LinearOpMode
+public class AutoRight extends LinearOpMode
 {
     /* Declare OpMode members. */
     private BNO055IMU imu = null;
@@ -188,7 +188,19 @@ public class Auto extends LinearOpMode
         telemetry.update();
 
 
-        driveStraight(DRIVE_SPEED, 27, 0);
+        turnToHeading(TURN_SPEED + 0.1, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
+
+        driveStraight(DRIVE_SPEED + 0.1, 27, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
+
+        driveStraight(DRIVE_SPEED, -37, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
+
+        turnToHeading(TURN_SPEED + 0.1, 0);
+        holdHeading(TURN_SPEED, 0, 0.5);
+
+        driveStraight(DRIVE_SPEED, 25, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
 

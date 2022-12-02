@@ -13,8 +13,6 @@ public class Primary extends OpMode
 {
     // Declare OpMode members
     Robot robot = new Robot(); // Instantiate Robot Class to Access Drive Motors
-    private ElapsedTime runtime = new ElapsedTime(); // Keep Track of Time
-    Robot.Direction lastDirection = Robot.Direction.NONE;
 
     // Code to run ONCE when the driver hits INIT
     @Override
@@ -29,7 +27,6 @@ public class Primary extends OpMode
 
     @Override
     public void start() {
-        runtime.reset();
         // Inform the User that The Arm is Initializing
         telemetry.addData("Status", "Initializing Arms...");
         telemetry.update();
@@ -38,6 +35,9 @@ public class Primary extends OpMode
     // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
+        int A_pos = this.robot.jointAMotor.getCurrentPosition();
+        int B_pos = this.robot.jointBMotor.getCurrentPosition();
+        int Claw_pos = this.robot.clawMotor.getCurrentPosition();
         // ------------------------
         // ----- Controller 1 -----
         // ------------------------
@@ -50,16 +50,16 @@ public class Primary extends OpMode
         double bottomRightPower = -gamepad1.right_stick_y/1.25 + gamepad1.left_stick_x/2 + gamepad1.right_stick_x/2;
 
         // Dpad Inputs
-        topLeftPower += ((gamepad1.dpad_up) ? 0.5: 0) + ((gamepad1.dpad_down) ? -0.5: 0) + ((gamepad1.dpad_right) ? 0.5: 0) + ((gamepad1.dpad_left) ? -0.5: 0);
-        topRightPower += ((gamepad1.dpad_up) ? 0.5: 0) + ((gamepad1.dpad_down) ? -0.5: 0) + ((gamepad1.dpad_left) ? 0.5: 0) + ((gamepad1.dpad_right) ? -0.5: 0);
-        bottomLeftPower += ((gamepad1.dpad_up) ? 0.5: 0) + ((gamepad1.dpad_down) ? -0.5: 0) + ((gamepad1.dpad_left) ? 0.5: 0) + ((gamepad1.dpad_right) ? -0.5: 0);
-        bottomRightPower += ((gamepad1.dpad_up) ? 0.5: 0) + ((gamepad1.dpad_down) ? -0.5: 0) + ((gamepad1.dpad_right) ? 0.5: 0) + ((gamepad1.dpad_left) ? -0.5: 0);
+        topLeftPower += ((gamepad1.dpad_up) ? 0.7: 0) + ((gamepad1.dpad_down) ? -0.7: 0) + ((gamepad1.dpad_right) ? 0.7: 0) + ((gamepad1.dpad_left) ? -0.7: 0);
+        topRightPower += ((gamepad1.dpad_up) ? 0.7: 0) + ((gamepad1.dpad_down) ? -0.7: 0) + ((gamepad1.dpad_left) ? 0.7: 0) + ((gamepad1.dpad_right) ? -0.7: 0);
+        bottomLeftPower += ((gamepad1.dpad_up) ? 0.7: 0) + ((gamepad1.dpad_down) ? -0.7: 0) + ((gamepad1.dpad_left) ? 0.7: 0) + ((gamepad1.dpad_right) ? -0.7: 0);
+        bottomRightPower += ((gamepad1.dpad_up) ? 0.7: 0) + ((gamepad1.dpad_down) ? -0.7: 0) + ((gamepad1.dpad_right) ? 0.7: 0) + ((gamepad1.dpad_left) ? -0.7: 0);
 
         // Trigger Rotation
-        topLeftPower += -gamepad1.left_trigger/2 + gamepad1.right_trigger/2;
-        topRightPower += gamepad1.left_trigger/2 + -gamepad1.right_trigger/2;
-        bottomLeftPower += -gamepad1.left_trigger/2 + gamepad1.right_trigger/2;
-        topRightPower += gamepad1.left_trigger/2 + -gamepad1.right_trigger/2;
+        topLeftPower += -gamepad1.left_trigger + gamepad1.right_trigger;
+        topRightPower += gamepad1.left_trigger + -gamepad1.right_trigger;
+        bottomLeftPower += -gamepad1.left_trigger + gamepad1.right_trigger;
+        bottomRightPower += gamepad1.left_trigger + -gamepad1.right_trigger;
 
         // Assign Calculated Values to Motors
         robot.topLeftMotor.setPower(topLeftPower);
@@ -78,23 +78,12 @@ public class Primary extends OpMode
         // Rotation Servo
         if (gamepad1.left_bumper) {
             robot.rotationServo.setPwmEnable();
-            robot.rotationServo.setPower(0);
-            lastDirection = Robot.Direction.LEFT;
+            robot.rotationServo.setPower(1);
         } else if (gamepad1.right_bumper) {
             robot.rotationServo.setPwmEnable();
             robot.rotationServo.setPower(-1);
-            lastDirection = Robot.Direction.RIGHT;
         } else {
-            switch (lastDirection) {
-                case LEFT:
-                    robot.rotationServo.setPower(-1);
-                    break;
-                case RIGHT:
-                    robot.rotationServo.setPower(0);
-                    break;
-            }
             robot.rotationServo.setPwmDisable();
-            lastDirection = Robot.Direction.NONE;
         }
 
         // ------------------------
@@ -102,17 +91,17 @@ public class Primary extends OpMode
         // ------------------------
 
         // Arm
-        robot.jointAMotor.setPower(-gamepad2.left_stick_y/2 + 0.1);
+        robot.jointAMotor.setPower(-gamepad2.left_stick_y/2 + (A_pos < 900 ? 0.1 : -0.2));
         robot.jointBMotor.setPower(gamepad2.right_stick_y/2 - 0.1);
 
         // Claw Motor
-        robot.clawMotor.setPower(-gamepad2.left_trigger/2 + gamepad2.right_trigger/2);
+        robot.clawMotor.setPower(-gamepad2.left_trigger/2.2 + gamepad2.right_trigger/2 + (Claw_pos > 50 ? -0.05 : 0.1));
 
         // Driver Station Telemetry
+        telemetry.addData("A", A_pos);
+        telemetry.addData("B", B_pos);
+        telemetry.addData("C", Claw_pos);
         telemetry.addData("Status", "Running...");
-        telemetry.addLine("Top Left " + topLeftPower + " Top Right " + topRightPower + "\n" +
-                                    "Bottom Left " + bottomLeftPower + " Bottom Right " + bottomRightPower);
-        telemetry.addData("Run Time", runtime.toString());
     }
 
     // Code to run ONCE after the driver hits STOP
