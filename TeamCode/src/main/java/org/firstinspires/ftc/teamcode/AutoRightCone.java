@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Autonomous
-public class AutoRight extends LinearOpMode
+public class AutoRightCone extends LinearOpMode
 {
     /* Declare OpMode members. */
     private BNO055IMU imu = null;
@@ -141,7 +141,6 @@ public class AutoRight extends LinearOpMode
          * This REPLACES waitForStart!
          */
         robot.init(hardwareMap);
-        robot.hubColor(0xFF0000);
         while (!isStarted() && !isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -163,7 +162,6 @@ public class AutoRight extends LinearOpMode
             telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
 
             telemetry.update();
-            robot.randomHubColor();
             sleep(20);
         }
 
@@ -202,28 +200,84 @@ public class AutoRight extends LinearOpMode
         turnToHeading(TURN_SPEED + 0.1, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
-        driveStraight(DRIVE_SPEED, 25, 0);
+        driveStraight(DRIVE_SPEED, 45, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
 
-        switch (tagOfInterest.id) {
-            case TAG_1:
-                turnToHeading(TURN_SPEED, 90);
-                holdHeading(TURN_SPEED, 90, 0.5);
+        turnToHeading(TURN_SPEED, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
 
-                driveStraight(DRIVE_SPEED, 20, 90);
-                holdHeading(TURN_SPEED, 90, 0.5);
-                break;
-            case TAG_3:
-                turnToHeading(TURN_SPEED, -90);
-                holdHeading(TURN_SPEED, -90, 0.5);
+        robot.jointAMotor.setTargetPosition(537);
+        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointAMotor.setPower(0.5);
 
-                driveStraight(DRIVE_SPEED, 20, -90);
-                holdHeading(TURN_SPEED, -90, 0.5);
-                break;
-            default:
-                break;
+        while (opModeIsActive() && robot.jointAMotor.isBusy()) {}
+
+        robot.jointAMotor.setTargetPosition(320);
+        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointAMotor.setPower(-0.3);
+
+        robot.jointBMotor.setTargetPosition(-1083);
+        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointBMotor.setPower(-0.5);
+
+        while (opModeIsActive() && robot.jointAMotor.isBusy() && robot.jointBMotor.isBusy()) {
+            telemetry.addLine("Joints Moving");
+            telemetry.update();
         }
+
+        robot.clawMotor.setTargetPosition(12);
+        robot.clawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.clawMotor.setPower(0.7);
+
+        while (opModeIsActive() && robot.clawMotor.isBusy()) {}
+
+        robot.jointAMotor.setTargetPosition(220);
+        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointAMotor.setPower(-0.3);
+
+        while (opModeIsActive() && robot.jointAMotor.isBusy()) {}
+
+        robot.clawServo.setPower(0);
+        sleep(1000);
+
+        directDrive(DRIVE_SPEED, 11);
+        sleep(700);
+
+        robot.clawServo.setPower(1);
+        sleep(1000);
+
+        directDrive(DRIVE_SPEED, -4);
+
+        robot.jointBMotor.setTargetPosition(-1183);
+        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointBMotor.setPower(-0.5);
+
+        while (opModeIsActive() && robot.jointBMotor.isBusy()) {}
+
+        directDrive(DRIVE_SPEED, -7);
+
+        sleep(15000);
+
+
+//        switch (tagOfInterest.id) {
+//            case TAG_1:
+//                turnToHeading(TURN_SPEED, 90);
+//                holdHeading(TURN_SPEED, 90, 0.5);
+//
+//                driveStraight(DRIVE_SPEED, 20, 90);
+//                holdHeading(TURN_SPEED, 90, 0.5);
+//                break;
+//            case TAG_3:
+//                turnToHeading(TURN_SPEED, -90);
+//                holdHeading(TURN_SPEED, -90, 0.5);
+//
+//                driveStraight(DRIVE_SPEED, 20, -90);
+//                holdHeading(TURN_SPEED, -90, 0.5);
+//                break;
+//            default:
+//                break;
+//        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -237,6 +291,39 @@ public class AutoRight extends LinearOpMode
      */
 
     // **********  HIGH Level driving functions.  ********************
+
+    public void directDrive(double driveSpeed, int inches) {
+        if (inches < 0) {
+            driveSpeed = -driveSpeed;
+        }
+
+        robot.topLeftMotor.setTargetPosition(robot.topLeftMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+        robot.topRightMotor.setTargetPosition(robot.topRightMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+        robot.bottomLeftMotor.setTargetPosition(robot.bottomLeftMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+        robot.bottomRightMotor.setTargetPosition(robot.bottomRightMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+
+        robot.topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.topLeftMotor.setPower(driveSpeed);
+        robot.topRightMotor.setPower(driveSpeed);
+        robot.bottomLeftMotor.setPower(driveSpeed);
+        robot.bottomRightMotor.setPower(driveSpeed);
+
+        while (opModeIsActive() && robot.topLeftMotor.isBusy() && robot.topRightMotor.isBusy() && robot.bottomLeftMotor.isBusy() && robot.bottomRightMotor.isBusy()) {}
+
+        robot.topLeftMotor.setPower(0);
+        robot.topRightMotor.setPower(0);
+        robot.bottomLeftMotor.setPower(0);
+        robot.bottomRightMotor.setPower(0);
+
+        robot.topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.topRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bottomRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
     public void driveByRatio(double maxDriveSpeed, double y, int trInchUnit) {
         double scale = 1 / (y + 1);

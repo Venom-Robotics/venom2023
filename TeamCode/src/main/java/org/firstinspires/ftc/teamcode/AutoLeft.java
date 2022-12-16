@@ -141,6 +141,7 @@ public class AutoLeft extends LinearOpMode
          * This REPLACES waitForStart!
          */
         robot.init(hardwareMap);
+        robot.hubColor(0xFF0000);
         while (!isStarted() && !isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -162,6 +163,7 @@ public class AutoLeft extends LinearOpMode
             telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
 
             telemetry.update();
+            robot.randomHubColor();
             sleep(20);
         }
 

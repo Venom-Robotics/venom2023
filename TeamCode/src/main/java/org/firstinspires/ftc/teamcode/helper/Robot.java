@@ -8,18 +8,23 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 
 import java.util.List;
+import java.util.Random;
 
 /** Class that Declares and Initializes Robot Motors to Simplify Access */
 public class Robot
 {
+
+    Random rand = new Random();
     // Constants
     public final double DRIVETRAIN_ENCODER_TICKS = 766.106508876;
     public final double JOINT_ENCODER_TICKS = 4005.55;
     public final double BONE1_LENGTH = 312;
     public final double BONE2_LENGTH = 406.4;
+    public final double DPAD_SPEED = 0.7;
 
     // Declare Drivetrain members
     public DcMotor topLeftMotor = null;
@@ -63,8 +68,8 @@ public class Robot
         allHubs = hwMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-            // Set Hub Color to White
-//            hub.setConstant(0xFFFFFF);
+//             Set Hub Color to White
+            hub.setConstant(0xFFFFFF);
         }
 
         // Define and Initialize Servos
@@ -117,5 +122,13 @@ public class Robot
         clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public void hubColor(int color) {
+        for (LynxModule hub : allHubs) {
+            hub.setConstant(color);
+        }
+    }
 
+    public void randomHubColor() {
+//        hubColor(rand.nextInt(16777215));
+    }
 }
