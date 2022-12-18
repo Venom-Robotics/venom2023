@@ -51,7 +51,7 @@ public class Primary extends OpMode
     public void loop() {
         // Grab Necessary Encoder Values
         int A_pos = this.robot.jointAMotor.getCurrentPosition();
-//        int B_pos = this.robot.jointBMotor.getCurrentPosition();
+        int B_pos = this.robot.jointBMotor.getCurrentPosition();
         int Claw_pos = this.robot.clawMotor.getCurrentPosition();
 
         // ------------------------
@@ -97,6 +97,9 @@ public class Primary extends OpMode
         // Driver Station Telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Status", "<font color='purple' font-weight=\"bold\">Running...</font>");
+        telemetry.addLine(String.valueOf(A_pos));
+        telemetry.addLine(String.valueOf(B_pos));
+        telemetry.addLine(String.valueOf(Claw_pos));
     }
 
     // Code to run ONCE after the driver hits STOP
@@ -110,8 +113,8 @@ public class Primary extends OpMode
 
     private double[] calculateDrivetrain() {
         // Pre-Calculated Stick and Button Values
-        double negative_left_stick_y = -gamepad1.left_stick_y/1.25;
-        double negative_right_stick_y = -gamepad1.right_stick_y/1.25;
+        double negative_left_stick_y = -gamepad1.left_stick_y;
+        double negative_right_stick_y = -gamepad1.right_stick_y;
 
         double half_left_stick_x = gamepad1.left_stick_x/2;
         double half_right_stick_x = gamepad1.right_stick_x/2;
