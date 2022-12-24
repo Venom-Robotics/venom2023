@@ -203,9 +203,9 @@ public class AutoPresets extends LinearOpMode
             robot.clawMotor.setPower(-gamepad2.left_trigger/2.2 + gamepad2.right_trigger/2 + (robot.clawMotor.getCurrentPosition() > 50 ? -0.05 : 0.1));
         }
 
-        int Ahightarget = 498;
-        int Bhightarget = -2091;
-        int Chightarget = 13;
+        int Ahightarget2 = 50;
+        int Bhightarget2 = -2710;
+        int Chightarget2 = 107;
         int Amidtarget = 750;
         int Bmidtarget = -1763;
         int Cmidtarget = -23;
@@ -215,6 +215,18 @@ public class AutoPresets extends LinearOpMode
         int Agroundtarget = 20;
         int Bgroundtarget = -1126;
         int Cgroundtarget = 30;
+        int Astack5 = -56;
+        int Bstack5 = -1388;
+        int Cstack5 = 29;
+        int Astack4 = -56;
+        int Bstack4 = -1359;
+        int Cstack4 = 29;
+        int Astack3 = -52;
+        int Bstack3 = -1261;
+        int Cstack3 = 32;
+        int Astack2 = -52;
+        int Bstack2 = -1143;
+        int Cstack2 = 26;
         robot.jointAMotor.setTargetPosition(Alowtarget);
         robot.jointBMotor.setTargetPosition(Blowtarget);
         robot.clawMotor.setTargetPosition(Clowtarget);
