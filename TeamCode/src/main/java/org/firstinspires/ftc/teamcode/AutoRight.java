@@ -56,7 +56,7 @@ public class AutoRight extends LinearOpMode
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 2.95276 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     // These constants dfine the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
@@ -141,7 +141,6 @@ public class AutoRight extends LinearOpMode
          * This REPLACES waitForStart!
          */
         robot.init(hardwareMap);
-        robot.hubColor(0xFF0000);
         while (!isStarted() && !isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -163,7 +162,6 @@ public class AutoRight extends LinearOpMode
             telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
 
             telemetry.update();
-            robot.randomHubColor();
             sleep(20);
         }
 

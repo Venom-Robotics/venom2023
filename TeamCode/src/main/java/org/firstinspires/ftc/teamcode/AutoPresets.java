@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.helper.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.helper.Constants;
 import org.firstinspires.ftc.teamcode.helper.Robot;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -142,7 +143,6 @@ public class AutoPresets extends LinearOpMode
          * This REPLACES waitForStart!
          */
         robot.init(hardwareMap);
-        robot.hubColor(0xFF0000);
         while (!isStarted() && !isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -164,7 +164,6 @@ public class AutoPresets extends LinearOpMode
             telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
 
             telemetry.update();
-            robot.randomHubColor();
             sleep(20);
         }
 
@@ -203,9 +202,9 @@ public class AutoPresets extends LinearOpMode
             robot.clawMotor.setPower(-gamepad2.left_trigger/2.2 + gamepad2.right_trigger/2 + (robot.clawMotor.getCurrentPosition() > 50 ? -0.05 : 0.1));
         }
 
-        int Ahightarget2 = 50;
-        int Bhightarget2 = -2710;
-        int Chightarget2 = 107;
+        int Ahightarget = 50;
+        int Bhightarget = -2710;
+        int Chightarget = 107;
         int Amidtarget = 750;
         int Bmidtarget = -1763;
         int Cmidtarget = -23;
