@@ -1,9 +1,8 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -15,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.helper.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.helper.Constants;
 import org.firstinspires.ftc.teamcode.helper.Robot;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -25,7 +23,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Autonomous
-public class AutoPresets extends LinearOpMode
+public class AutoRightCone extends LinearOpMode
 {
     /* Declare OpMode members. */
     private BNO055IMU imu = null;
@@ -189,86 +187,97 @@ public class AutoPresets extends LinearOpMode
         }
         telemetry.update();
 
-        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while (opModeIsActive() && !gamepad1.b) {
-            // Arm
-            robot.jointAMotor.setPower(-gamepad2.left_stick_y/2 + (robot.jointBMotor.getCurrentPosition() < 900 ? 0.1 : -0.2));
-            robot.jointBMotor.setPower(gamepad2.right_stick_y/2 - 0.1);
+        turnToHeading(TURN_SPEED + 0.1, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
 
-            // Claw Motor
-            robot.clawMotor.setPower(-gamepad2.left_trigger/2.2 + gamepad2.right_trigger/2 + (robot.clawMotor.getCurrentPosition() > 50 ? -0.05 : 0.1));
-        }
+        driveStraight(DRIVE_SPEED + 0.1, 27, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
 
-        int Ahightarget = 50;
-        int Bhightarget = -2710;
-        int Chightarget = 107;
-        int Amidtarget = 750;
-        int Bmidtarget = -1763;
-        int Cmidtarget = -23;
-        int Alowtarget = 712;
-        int Blowtarget = -1415;
-        int Clowtarget = -30;
-        int Agroundtarget = 20;
-        int Bgroundtarget = -1126;
-        int Cgroundtarget = 30;
-        int Astack5 = -56;
-        int Bstack5 = -1388;
-        int Cstack5 = 29;
-        int Astack4 = -56;
-        int Bstack4 = -1359;
-        int Cstack4 = 29;
-        int Astack3 = -52;
-        int Bstack3 = -1261;
-        int Cstack3 = 32;
-        int Astack2 = -52;
-        int Bstack2 = -1143;
-        int Cstack2 = 26;
-        robot.jointAMotor.setTargetPosition(Alowtarget);
-        robot.jointBMotor.setTargetPosition(Blowtarget);
-        robot.clawMotor.setTargetPosition(Clowtarget);
+        driveStraight(DRIVE_SPEED, -37, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
+
+        turnToHeading(TURN_SPEED + 0.1, 0);
+        holdHeading(TURN_SPEED, 0, 0.5);
+
+        driveStraight(DRIVE_SPEED, 45, 0);
+        holdHeading(TURN_SPEED, 0, 0.5);
+
+
+        turnToHeading(TURN_SPEED, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
+
+        robot.jointAMotor.setTargetPosition(537);
         robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.clawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        if (Alowtarget > robot.jointAMotor.getCurrentPosition()) {
-            robot.jointAMotor.setPower(0.5);
-        } else {
-            robot.jointAMotor.setPower(-0.5);
-        }
-        if (Blowtarget > robot.jointBMotor.getCurrentPosition()) {
-            robot.jointBMotor.setPower(0.5);
-        } else {
-            robot.jointBMotor.setPower(-0.5);
-        }
-        if (Clowtarget > robot.clawMotor.getCurrentPosition()) {
-            robot.clawMotor.setPower(0.7);
-        } else {
-            robot.clawMotor.setPower(-0.7);
-        }
+        robot.jointAMotor.setPower(0.5);
 
-        while (opModeIsActive() && (robot.jointAMotor.isBusy() || robot.jointBMotor.isBusy() || robot.clawMotor.isBusy())) {
-            telemetry.addLine(String.valueOf(opModeIsActive()));
-            telemetry.addLine(String.valueOf(robot.jointAMotor.isBusy()));
-            telemetry.addLine(String.valueOf(robot.jointBMotor.isBusy()));
-            telemetry.addLine(String.valueOf(robot.clawMotor.isBusy()));
+        while (opModeIsActive() && robot.jointAMotor.isBusy()) {}
+
+        robot.jointAMotor.setTargetPosition(320);
+        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointAMotor.setPower(-0.3);
+
+        robot.jointBMotor.setTargetPosition(-1083);
+        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointBMotor.setPower(-0.5);
+
+        while (opModeIsActive() && robot.jointAMotor.isBusy() && robot.jointBMotor.isBusy()) {
+            telemetry.addLine("Joints Moving");
             telemetry.update();
         }
 
-        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.clawMotor.setTargetPosition(12);
+        robot.clawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.clawMotor.setPower(0.7);
 
-        while (opModeIsActive()) {
-            // Arm
-            robot.jointAMotor.setPower(-gamepad2.left_stick_y/2 + (robot.jointBMotor.getCurrentPosition() < 900 ? 0.1 : -0.2));
-            robot.jointBMotor.setPower(gamepad2.right_stick_y/2 - 0.1);
+        while (opModeIsActive() && robot.clawMotor.isBusy()) {}
 
-            // Claw Motor
-            robot.clawMotor.setPower(-gamepad2.left_trigger/2.2 + gamepad2.right_trigger/2 + (robot.clawMotor.getCurrentPosition() > 50 ? -0.05 : 0.1));
-        }
+        robot.jointAMotor.setTargetPosition(220);
+        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointAMotor.setPower(-0.3);
 
+        while (opModeIsActive() && robot.jointAMotor.isBusy()) {}
+
+        robot.clawServo.setPower(0);
+        sleep(1000);
+
+        directDrive(DRIVE_SPEED, 11);
+        sleep(700);
+
+        robot.clawServo.setPower(1);
+        sleep(1000);
+
+        directDrive(DRIVE_SPEED, -4);
+
+        robot.jointBMotor.setTargetPosition(-1183);
+        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.jointBMotor.setPower(-0.5);
+
+        while (opModeIsActive() && robot.jointBMotor.isBusy()) {}
+
+        directDrive(DRIVE_SPEED, -7);
+
+        sleep(15000);
+
+
+//        switch (tagOfInterest.id) {
+//            case TAG_1:
+//                turnToHeading(TURN_SPEED, 90);
+//                holdHeading(TURN_SPEED, 90, 0.5);
+//
+//                driveStraight(DRIVE_SPEED, 20, 90);
+//                holdHeading(TURN_SPEED, 90, 0.5);
+//                break;
+//            case TAG_3:
+//                turnToHeading(TURN_SPEED, -90);
+//                holdHeading(TURN_SPEED, -90, 0.5);
+//
+//                driveStraight(DRIVE_SPEED, 20, -90);
+//                holdHeading(TURN_SPEED, -90, 0.5);
+//                break;
+//            default:
+//                break;
+//        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -282,6 +291,39 @@ public class AutoPresets extends LinearOpMode
      */
 
     // **********  HIGH Level driving functions.  ********************
+
+    public void directDrive(double driveSpeed, int inches) {
+        if (inches < 0) {
+            driveSpeed = -driveSpeed;
+        }
+
+        robot.topLeftMotor.setTargetPosition(robot.topLeftMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+        robot.topRightMotor.setTargetPosition(robot.topRightMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+        robot.bottomLeftMotor.setTargetPosition(robot.bottomLeftMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+        robot.bottomRightMotor.setTargetPosition(robot.bottomRightMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
+
+        robot.topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.topLeftMotor.setPower(driveSpeed);
+        robot.topRightMotor.setPower(driveSpeed);
+        robot.bottomLeftMotor.setPower(driveSpeed);
+        robot.bottomRightMotor.setPower(driveSpeed);
+
+        while (opModeIsActive() && robot.topLeftMotor.isBusy() && robot.topRightMotor.isBusy() && robot.bottomLeftMotor.isBusy() && robot.bottomRightMotor.isBusy()) {}
+
+        robot.topLeftMotor.setPower(0);
+        robot.topRightMotor.setPower(0);
+        robot.bottomLeftMotor.setPower(0);
+        robot.bottomRightMotor.setPower(0);
+
+        robot.topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.topRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bottomRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
     public void driveByRatio(double maxDriveSpeed, double y, int trInchUnit) {
         double scale = 1 / (y + 1);

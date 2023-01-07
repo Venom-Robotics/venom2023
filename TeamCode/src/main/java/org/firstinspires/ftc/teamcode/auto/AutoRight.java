@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.helper.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.helper.Constants;
 import org.firstinspires.ftc.teamcode.helper.Robot;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -23,7 +24,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Autonomous
-public class AutoLeft extends LinearOpMode
+public class AutoRight extends LinearOpMode
 {
     /* Declare OpMode members. */
     private BNO055IMU imu = null;
@@ -56,7 +57,7 @@ public class AutoLeft extends LinearOpMode
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 2.95276 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     // These constants dfine the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
@@ -188,43 +189,73 @@ public class AutoLeft extends LinearOpMode
         telemetry.update();
 
 
-        turnToHeading(TURN_SPEED + 0.1, 90);
-        holdHeading(TURN_SPEED, 90, 0.5);
+        turnToHeading(TURN_SPEED + 0.1, -90);
+//        holdHeading(TURN_SPEED, -90, 0.5);
 
-        driveStraight(DRIVE_SPEED + 0.1, 27, 90);
-        holdHeading(TURN_SPEED, 90, 0.5);
+        driveStraight(DRIVE_SPEED + 0.1, 27, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
 
-        driveStraight(DRIVE_SPEED, -37, 90);
-        holdHeading(TURN_SPEED, 90, 0.5);
+        driveStraight(DRIVE_SPEED, -37, -90);
+        holdHeading(TURN_SPEED, -90, 0.5);
 
         turnToHeading(TURN_SPEED + 0.1, 0);
-        holdHeading(TURN_SPEED, 0, 0.5);
+//        holdHeading(TURN_SPEED, 0, 0.5);
 
-        driveStraight(DRIVE_SPEED, 25, 0);
-        holdHeading(TURN_SPEED, 0, 0.5);
+        driveStraight(DRIVE_SPEED, 45, 0);
+//        holdHeading(TURN_SPEED, 0, 0.5);
 
+        turnToHeading(TURN_SPEED + 0.1, -90);
+//        holdHeading(TURN_SPEED, -90, 0.5);
 
-        switch (tagOfInterest.id) {
-            case TAG_1:
-                turnToHeading(TURN_SPEED, 90);
-                holdHeading(TURN_SPEED, 90, 0.5);
+        runToPreset(600, -1518, 0);
+        while (opModeIsActive() && manipulatorIsBusy()) {}
 
-                driveStraight(DRIVE_SPEED, 20, 90);
-                holdHeading(TURN_SPEED, 90, 0.5);
-                break;
-            case TAG_3:
-                turnToHeading(TURN_SPEED, -90);
-                holdHeading(TURN_SPEED, -90, 0.5);
+        runToPreset(Constants.Presets.Stack.STACK5_A, Constants.Presets.Stack.STACK5_B, Constants.Presets.Stack.STACK5_C);
+        while (opModeIsActive() && manipulatorIsBusy()) {}
 
-                driveStraight(DRIVE_SPEED, 20, -90);
-                holdHeading(TURN_SPEED, -90, 0.5);
-                break;
-            default:
-                break;
-        }
+        sleep(10000);
+
+//        switch (tagOfInterest.id) {
+//            case TAG_1:
+//                turnToHeading(TURN_SPEED, 90);
+//                holdHeading(TURN_SPEED, 90, 0.5);
+//
+//                driveStraight(DRIVE_SPEED, 20, 90);
+//                holdHeading(TURN_SPEED, 90, 0.5);
+//                break;
+//            case TAG_3:
+//                turnToHeading(TURN_SPEED, -90);
+//                holdHeading(TURN_SPEED, -90, 0.5);
+//
+//                driveStraight(DRIVE_SPEED, 20, -90);
+//                holdHeading(TURN_SPEED, -90, 0.5);
+//                break;
+//            default:
+//                break;
+//        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+    }
+
+    private boolean manipulatorIsBusy() {
+        return (robot.jointAMotor.isBusy() || robot.jointBMotor.isBusy() || robot.clawMotor.isBusy());
+    }
+
+    private void runToPosition(DcMotor motor, int position, double power) {
+        motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(power);
+    }
+
+    private void runToPreset(int A, int B, int C) {
+        int A_pos = robot.jointAMotor.getCurrentPosition();
+        int B_pos = robot.jointBMotor.getCurrentPosition();
+        int Claw_pos = robot.clawMotor.getCurrentPosition();
+
+        runToPosition(robot.jointAMotor, A, (A > A_pos) ? 0.5 : -0.5);
+        runToPosition(robot.jointBMotor, B, (B > B_pos) ? 0.5 : -0.5);
+        runToPosition(robot.clawMotor, C, (C > Claw_pos) ? 0.5 : -0.5);
     }
 
     /*

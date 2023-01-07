@@ -171,14 +171,14 @@ public class Primary extends OpMode {
 
         // Driver Station Telemetry
         telemetry.addData("Status", "<font color='purple' font-weight=\"bold\">Running...</font>");
-        telemetry.addLine("Run Time: " + runtime.toString());
-        telemetry.addData("Manipulator", moving_to_preset ? "Running to Preset" : "Running with Joysticks");
+        telemetry.addData("Manipulator", moving_to_preset ? "<font color='red' font-weight=\"bold\">Running to Preset</font>" : "<font color='green' font-weight=\"bold\">Running with Joysticks</font>");
+        telemetry.addLine("Stack Position: " + new String(new char[stack_position]).replace("\0", "▲"));
         telemetry.addLine("\tPositions:" +
                 "\n\t\tA: " + A_pos +
                 "\n\t\tB: " + B_pos +
                 "\n\t\tC: " + Claw_pos);
-        telemetry.addLine("\tStack Position: " + new String(new char[stack_position]).replace("\0", "▲"));
     }
+    //  telemetry.addLine("Run Time: " + runtime.toString());
 
     // Code to run ONCE after the driver hits STOP
     @Override

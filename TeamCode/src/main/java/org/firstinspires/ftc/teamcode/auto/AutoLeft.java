@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 @Autonomous
-public class AutoRight extends LinearOpMode
+public class AutoLeft extends LinearOpMode
 {
     /* Declare OpMode members. */
     private BNO055IMU imu = null;
@@ -56,7 +56,7 @@ public class AutoRight extends LinearOpMode
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 2.95276 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * Math.PI);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
 
     // These constants dfine the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
@@ -188,14 +188,14 @@ public class AutoRight extends LinearOpMode
         telemetry.update();
 
 
-        turnToHeading(TURN_SPEED + 0.1, -90);
-        holdHeading(TURN_SPEED, -90, 0.5);
+        turnToHeading(TURN_SPEED + 0.1, 90);
+        holdHeading(TURN_SPEED, 90, 0.5);
 
-        driveStraight(DRIVE_SPEED + 0.1, 27, -90);
-        holdHeading(TURN_SPEED, -90, 0.5);
+        driveStraight(DRIVE_SPEED + 0.1, 27, 90);
+        holdHeading(TURN_SPEED, 90, 0.5);
 
-        driveStraight(DRIVE_SPEED, -37, -90);
-        holdHeading(TURN_SPEED, -90, 0.5);
+        driveStraight(DRIVE_SPEED, -37, 90);
+        holdHeading(TURN_SPEED, 90, 0.5);
 
         turnToHeading(TURN_SPEED + 0.1, 0);
         holdHeading(TURN_SPEED, 0, 0.5);

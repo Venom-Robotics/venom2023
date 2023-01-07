@@ -7,27 +7,27 @@ public final class Constants {
             public static final int HIGH_B = -2710;
             public static final int HIGH_C = 107;
 
-            public static final int MID_A = 750;
-            public static final int MID_B = -1763;
-            public static final int MID_C = -23;
+            public static final int MID_A = 56;
+            public static final int MID_B = -2146;
+            public static final int MID_C = 38;
 
-            public static final int LOW_A = 712;
-            public static final int LOW_B = -1415;
-            public static final int LOW_C = -30;
+            public static final int LOW_A = 61;
+            public static final int LOW_B = -1725;
+            public static final int LOW_C = 50;
         }
 
         public static class Stack {
-            public static final int STACK5_A = -56;
-            public static final int STACK5_B = -1388;
-            public static final int STACK5_C = 29;
+            public static final int STACK5_A = -24;
+            public static final int STACK5_B = -1524;
+            public static final int STACK5_C = 26;
 
-            public static final int STACK4_A = -56;
-            public static final int STACK4_B = -1359;
-            public static final int STACK4_C = 29;
+            public static final int STACK4_A = -24;
+            public static final int STACK4_B = -1524;
+            public static final int STACK4_C = 26;
 
-            public static final int STACK3_A = -52;
-            public static final int STACK3_B = -1261;
-            public static final int STACK3_C = 32;
+            public static final int STACK3_A = -24;
+            public static final int STACK3_B = -1524;
+            public static final int STACK3_C = 26;
 
             public static final int STACK2_A = -52;
             public static final int STACK2_B = -1143;
