@@ -190,7 +190,7 @@ public class AutoRight extends LinearOpMode
 
 
         turnToHeading(TURN_SPEED + 0.1, -90);
-//        holdHeading(TURN_SPEED, -90, 0.5);
+        holdHeading(TURN_SPEED, -90, 0.5);
 
         driveStraight(DRIVE_SPEED + 0.1, 27, -90);
         holdHeading(TURN_SPEED, -90, 0.5);
@@ -199,13 +199,13 @@ public class AutoRight extends LinearOpMode
         holdHeading(TURN_SPEED, -90, 0.5);
 
         turnToHeading(TURN_SPEED + 0.1, 0);
-//        holdHeading(TURN_SPEED, 0, 0.5);
+        holdHeading(TURN_SPEED, 0, 0.5);
 
         driveStraight(DRIVE_SPEED, 45, 0);
-//        holdHeading(TURN_SPEED, 0, 0.5);
+        holdHeading(TURN_SPEED, 0, 0.5);
 
         turnToHeading(TURN_SPEED + 0.1, -90);
-//        holdHeading(TURN_SPEED, -90, 0.5);
+        holdHeading(TURN_SPEED, -90, 0.5);
 
         runToPreset(600, -1518, 0);
         while (opModeIsActive() && manipulatorIsBusy()) {}
