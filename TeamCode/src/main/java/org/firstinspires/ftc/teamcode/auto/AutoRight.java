@@ -201,99 +201,28 @@ public class AutoRight extends LinearOpMode
         turnToHeading(TURN_SPEED + 0.1, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
-        driveStraight(DRIVE_SPEED, 47, 0);
+        driveStraight(DRIVE_SPEED, 25, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
-        turnToHeading(TURN_SPEED + 0.1, -90);
-        holdHeading(TURN_SPEED, -90, 0.5);
 
-        runToPreset(600, -1518, 0);
-        while (opModeIsActive() && manipulatorIsBusy()) {}
+        switch (tagOfInterest.id) {
+            case TAG_1:
+                turnToHeading(TURN_SPEED, 90);
+                holdHeading(TURN_SPEED, 90, 0.5);
 
-        runToPreset(Constants.Presets.Stack.STACK5_A, Constants.Presets.Stack.STACK5_B, Constants.Presets.Stack.STACK5_C - 7);
-        robot.clawServo.setPower(0);
-        while (opModeIsActive() && manipulatorIsBusy()) {}
+                driveStraight(DRIVE_SPEED, 20, 90);
+                holdHeading(TURN_SPEED, 90, 0.5);
+                break;
+            case TAG_3:
+                turnToHeading(TURN_SPEED, -90);
+                holdHeading(TURN_SPEED, -90, 0.5);
 
-        topLeftMotor.setTargetPosition(topLeftMotor.getCurrentPosition() + 525);
-        bottomLeftMotor.setTargetPosition(bottomLeftMotor.getCurrentPosition() + 525);
-        topRightMotor.setTargetPosition(topRightMotor.getCurrentPosition() + 525);
-        bottomRightMotor.setTargetPosition(bottomRightMotor.getCurrentPosition() + 525);
-
-        topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        topLeftMotor.setPower(0.5);
-        topRightMotor.setPower(0.5);
-        bottomLeftMotor.setPower(0.5);
-        bottomRightMotor.setPower(0.5);
-
-        while (opModeIsActive() && (topLeftMotor.isBusy() || bottomLeftMotor.isBusy() || topRightMotor.isBusy() || bottomRightMotor.isBusy())) {
-
+                driveStraight(DRIVE_SPEED, 20, -90);
+                holdHeading(TURN_SPEED, -90, 0.5);
+                break;
+            default:
+                break;
         }
-
-        topLeftMotor.setPower(0);
-        topRightMotor.setPower(0);
-        bottomLeftMotor.setPower(0);
-        bottomRightMotor.setPower(0);
-
-        robot.clawServo.setPower(1);
-        sleep(1000);
-
-        topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        topRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottomRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        topLeftMotor.setTargetPosition(topLeftMotor.getCurrentPosition() - 525);
-        bottomLeftMotor.setTargetPosition(bottomLeftMotor.getCurrentPosition() - 525);
-        topRightMotor.setTargetPosition(topRightMotor.getCurrentPosition() - 525);
-        bottomRightMotor.setTargetPosition(bottomRightMotor.getCurrentPosition() - 525);
-
-        topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        topLeftMotor.setPower(-0.5);
-        topRightMotor.setPower(-0.5);
-        bottomLeftMotor.setPower(-0.5);
-        bottomRightMotor.setPower(-0.5);
-
-        while (opModeIsActive() && (topLeftMotor.isBusy() || bottomLeftMotor.isBusy() || topRightMotor.isBusy() || bottomRightMotor.isBusy())) {
-
-        }
-
-        topLeftMotor.setPower(0);
-        topRightMotor.setPower(0);
-        bottomLeftMotor.setPower(0);
-        bottomRightMotor.setPower(0);
-
-        runToPreset(Constants.Presets.Junctions.HIGH_A, Constants.Presets.Junctions.HIGH_B, Constants.Presets.Junctions.HIGH_C);
-        turnToHeading(TURN_SPEED, 90);
-        holdHeading(TURN_SPEED, 90, 0.5);
-
-        sleep(10000);
-
-//        switch (tagOfInterest.id) {
-//            case TAG_1:
-//                turnToHeading(TURN_SPEED, 90);
-//                holdHeading(TURN_SPEED, 90, 0.5);
-//
-//                driveStraight(DRIVE_SPEED, 20, 90);
-//                holdHeading(TURN_SPEED, 90, 0.5);
-//                break;
-//            case TAG_3:
-//                turnToHeading(TURN_SPEED, -90);
-//                holdHeading(TURN_SPEED, -90, 0.5);
-//
-//                driveStraight(DRIVE_SPEED, 20, -90);
-//                holdHeading(TURN_SPEED, -90, 0.5);
-//                break;
-//            default:
-//                break;
-//        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

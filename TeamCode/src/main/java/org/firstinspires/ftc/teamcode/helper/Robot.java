@@ -51,7 +51,7 @@ public class Robot {
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
 //             Set Hub Color to White
-            hub.setConstant(0xFFFFFF);
+//            hub.setConstant(0xFFFFFF);
         }
 
         // Define and Initialize Servos

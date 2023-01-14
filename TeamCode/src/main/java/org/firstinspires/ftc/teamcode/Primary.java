@@ -72,7 +72,7 @@ public class Primary extends OpMode {
     @Override
     public void loop() {
         // Pre-Loop Logic
-        // Reset Manipulator if Moving is Complete or 'Start' is Pressed
+//         Reset Manipulator if Moving is Complete or 'Start' is Pressed
         if ((moving_to_preset && !manipulatorIsBusy()) || gamepad2.start) {
             resetManipulator();
             moving_to_preset = false;

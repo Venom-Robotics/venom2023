@@ -7,6 +7,11 @@ public final class Constants {
             public static final int HIGH_B = -2710;
             public static final int HIGH_C = 107;
 
+            public static final int AUTO_HIGH_A = 72;
+            public static final int AUTO_HIGH_B = -2633;
+            public static final int AUTO_HIGH_C = 50;
+
+
             public static final int MID_A = 56;
             public static final int MID_B = -2146;
             public static final int MID_C = 38;

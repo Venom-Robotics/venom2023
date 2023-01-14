@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.helper.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.helper.Constants;
 import org.firstinspires.ftc.teamcode.helper.Robot;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -22,8 +24,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous
-public class AutoRightCone extends LinearOpMode
+public class AutoRightFancy extends LinearOpMode
 {
     /* Declare OpMode members. */
     private BNO055IMU imu = null;
@@ -56,7 +59,7 @@ public class AutoRightCone extends LinearOpMode
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 2.95276 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     // These constants dfine the desired driving/control characteristics
     // They can/should be tweaked to suit the specific robot drive train.
@@ -194,71 +197,167 @@ public class AutoRightCone extends LinearOpMode
         driveStraight(DRIVE_SPEED + 0.1, 27, -90);
         holdHeading(TURN_SPEED, -90, 0.5);
 
-        driveStraight(DRIVE_SPEED, -37, -90);
+        driveStraight(DRIVE_SPEED + 0.1, -37, -90);
         holdHeading(TURN_SPEED, -90, 0.5);
 
-        turnToHeading(TURN_SPEED + 0.1, 0);
+        turnToHeading(TURN_SPEED - 0.1, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
-        driveStraight(DRIVE_SPEED, 45, 0);
+        driveStraight(DRIVE_SPEED + 0.1, 47, 0);
         holdHeading(TURN_SPEED, 0, 0.5);
 
-
-        turnToHeading(TURN_SPEED, -90);
+        turnToHeading(TURN_SPEED + 0.1, -90);
         holdHeading(TURN_SPEED, -90, 0.5);
 
-        robot.jointAMotor.setTargetPosition(537);
-        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.jointAMotor.setPower(0.5);
+        runToPreset(600, -1518, 0);
+        while (opModeIsActive() && manipulatorIsBusy()) {}
 
-        while (opModeIsActive() && robot.jointAMotor.isBusy()) {}
+        runToPreset(Constants.Presets.Stack.STACK5_A, Constants.Presets.Stack.STACK5_B, Constants.Presets.Stack.STACK5_C - 10);
+        robot.clawServo.setPower(0);
+        while (opModeIsActive() && manipulatorIsBusy()) {}
 
-        robot.jointAMotor.setTargetPosition(320);
-        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.jointAMotor.setPower(-0.3);
+        topLeftMotor.setTargetPosition(topLeftMotor.getCurrentPosition() + 555);
+        bottomLeftMotor.setTargetPosition(bottomLeftMotor.getCurrentPosition() + 555);
+        topRightMotor.setTargetPosition(topRightMotor.getCurrentPosition() + 555);
+        bottomRightMotor.setTargetPosition(bottomRightMotor.getCurrentPosition() + 555);
 
-        robot.jointBMotor.setTargetPosition(-1083);
-        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.jointBMotor.setPower(-0.5);
+        topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (opModeIsActive() && robot.jointAMotor.isBusy() && robot.jointBMotor.isBusy()) {
-            telemetry.addLine("Joints Moving");
-            telemetry.update();
+        topLeftMotor.setPower(0.5);
+        topRightMotor.setPower(0.5);
+        bottomLeftMotor.setPower(0.5);
+        bottomRightMotor.setPower(0.5);
+
+        while (opModeIsActive() && (topLeftMotor.isBusy() || bottomLeftMotor.isBusy() || topRightMotor.isBusy() || bottomRightMotor.isBusy())) {
+
         }
 
-        robot.clawMotor.setTargetPosition(12);
-        robot.clawMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.clawMotor.setPower(0.7);
-
-        while (opModeIsActive() && robot.clawMotor.isBusy()) {}
-
-        robot.jointAMotor.setTargetPosition(220);
-        robot.jointAMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.jointAMotor.setPower(-0.3);
-
-        while (opModeIsActive() && robot.jointAMotor.isBusy()) {}
-
-        robot.clawServo.setPower(0);
-        sleep(1000);
-
-        directDrive(DRIVE_SPEED, 11);
-        sleep(700);
+        topLeftMotor.setPower(0);
+        topRightMotor.setPower(0);
+        bottomLeftMotor.setPower(0);
+        bottomRightMotor.setPower(0);
 
         robot.clawServo.setPower(1);
         sleep(1000);
 
-        directDrive(DRIVE_SPEED, -4);
 
-        robot.jointBMotor.setTargetPosition(-1183);
-        robot.jointBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.jointBMotor.setPower(-0.5);
+        topLeftMotor.setTargetPosition(topLeftMotor.getCurrentPosition() - 125);
+        bottomLeftMotor.setTargetPosition(bottomLeftMotor.getCurrentPosition() - 125);
+        topRightMotor.setTargetPosition(topRightMotor.getCurrentPosition() - 125);
+        bottomRightMotor.setTargetPosition(bottomRightMotor.getCurrentPosition() - 125);
 
-        while (opModeIsActive() && robot.jointBMotor.isBusy()) {}
+        topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        directDrive(DRIVE_SPEED, -7);
+        topLeftMotor.setPower(-0.5);
+        topRightMotor.setPower(-0.5);
+        bottomLeftMotor.setPower(-0.5);
+        bottomRightMotor.setPower(-0.5);
 
-        sleep(15000);
+        while (opModeIsActive() && (topLeftMotor.isBusy() || bottomLeftMotor.isBusy() || topRightMotor.isBusy() || bottomRightMotor.isBusy())) {
 
+        }
+
+        topLeftMotor.setPower(0);
+        topRightMotor.setPower(0);
+        bottomLeftMotor.setPower(0);
+        bottomRightMotor.setPower(0);
+
+
+        runToPreset(Constants.Presets.Junctions.HIGH_A, Constants.Presets.Junctions.HIGH_B, robot.clawMotor.getCurrentPosition());
+        sleep(500);
+
+        topLeftMotor.setTargetPosition(topLeftMotor.getCurrentPosition() - 135);
+        bottomLeftMotor.setTargetPosition(bottomLeftMotor.getCurrentPosition() - 135);
+        topRightMotor.setTargetPosition(topRightMotor.getCurrentPosition() - 135);
+        bottomRightMotor.setTargetPosition(bottomRightMotor.getCurrentPosition() - 135);
+
+        topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        topLeftMotor.setPower(-0.5);
+        topRightMotor.setPower(-0.5);
+        bottomLeftMotor.setPower(-0.5);
+        bottomRightMotor.setPower(-0.5);
+
+        while (opModeIsActive() && (topLeftMotor.isBusy() || bottomLeftMotor.isBusy() || topRightMotor.isBusy() || bottomRightMotor.isBusy())) {
+
+        }
+
+        topLeftMotor.setPower(0);
+        topRightMotor.setPower(0);
+        bottomLeftMotor.setPower(0);
+        bottomRightMotor.setPower(0);
+
+        topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        topRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        sleep(1000);
+
+        topLeftMotor.setTargetPosition(topLeftMotor.getCurrentPosition() - 1150);
+        bottomLeftMotor.setTargetPosition(bottomLeftMotor.getCurrentPosition() - 1150);
+        topRightMotor.setTargetPosition(topRightMotor.getCurrentPosition() - 1150);
+        bottomRightMotor.setTargetPosition(bottomRightMotor.getCurrentPosition() - 1150);
+
+        topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        topLeftMotor.setPower(-0.5);
+        topRightMotor.setPower(-0.5);
+        bottomLeftMotor.setPower(-0.5);
+        bottomRightMotor.setPower(-0.5);
+
+        while (opModeIsActive() && (topLeftMotor.isBusy() || bottomLeftMotor.isBusy() || topRightMotor.isBusy() || bottomRightMotor.isBusy())) {
+
+        }
+
+        topLeftMotor.setPower(0);
+        topRightMotor.setPower(0);
+        bottomLeftMotor.setPower(0);
+        bottomRightMotor.setPower(0);
+
+        topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        topRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        turnToHeading(TURN_SPEED, 0);
+        holdHeading(TURN_SPEED, 0, 0.5);
+
+        int Claw_pos = robot.clawMotor.getCurrentPosition();
+        runToPosition(robot.clawMotor, robot.clawMotor.getCurrentPosition() + 27, (robot.clawMotor.getCurrentPosition() + 27 > Claw_pos) ? 1.0: -1.0);
+        sleep(2000);
+
+        topLeftMotor.setPower(0.4);
+        topRightMotor.setPower(0.4);
+        bottomLeftMotor.setPower(0.4);
+        bottomRightMotor.setPower(0.4);
+
+        sleep(450);
+
+        topLeftMotor.setPower(0);
+        topRightMotor.setPower(0);
+        bottomLeftMotor.setPower(0);
+        bottomRightMotor.setPower(0);
+
+
+//        driveStraight(DRIVE_SPEED - 0.4, 20, 0);
+//        holdHeading(TURN_SPEED, 0, 0.5);
+
+        robot.clawServo.setPower(0);
+
+        sleep(10000);
 
 //        switch (tagOfInterest.id) {
 //            case TAG_1:
@@ -283,6 +382,26 @@ public class AutoRightCone extends LinearOpMode
         telemetry.update();
     }
 
+    private boolean manipulatorIsBusy() {
+        return (robot.jointAMotor.isBusy() || robot.jointBMotor.isBusy() || robot.clawMotor.isBusy());
+    }
+
+    private void runToPosition(DcMotor motor, int position, double power) {
+        motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(power);
+    }
+
+    private void runToPreset(int A, int B, int C) {
+        int A_pos = robot.jointAMotor.getCurrentPosition();
+        int B_pos = robot.jointBMotor.getCurrentPosition();
+        int Claw_pos = robot.clawMotor.getCurrentPosition();
+
+        runToPosition(robot.jointAMotor, A, (A > A_pos) ? 0.5 : -0.5);
+        runToPosition(robot.jointBMotor, B, (B > B_pos) ? 0.5 : -0.5);
+        runToPosition(robot.clawMotor, C, (C > Claw_pos) ? 0.5 : -0.5);
+    }
+
     /*
      * ====================================================================================================
      * Driving "Helper" functions are below this line.
@@ -291,39 +410,6 @@ public class AutoRightCone extends LinearOpMode
      */
 
     // **********  HIGH Level driving functions.  ********************
-
-    public void directDrive(double driveSpeed, int inches) {
-        if (inches < 0) {
-            driveSpeed = -driveSpeed;
-        }
-
-        robot.topLeftMotor.setTargetPosition(robot.topLeftMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
-        robot.topRightMotor.setTargetPosition(robot.topRightMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
-        robot.bottomLeftMotor.setTargetPosition(robot.bottomLeftMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
-        robot.bottomRightMotor.setTargetPosition(robot.bottomRightMotor.getCurrentPosition() + (int) (COUNTS_PER_INCH * inches));
-
-        robot.topLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.topRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.bottomLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.bottomRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.topLeftMotor.setPower(driveSpeed);
-        robot.topRightMotor.setPower(driveSpeed);
-        robot.bottomLeftMotor.setPower(driveSpeed);
-        robot.bottomRightMotor.setPower(driveSpeed);
-
-        while (opModeIsActive() && robot.topLeftMotor.isBusy() && robot.topRightMotor.isBusy() && robot.bottomLeftMotor.isBusy() && robot.bottomRightMotor.isBusy()) {}
-
-        robot.topLeftMotor.setPower(0);
-        robot.topRightMotor.setPower(0);
-        robot.bottomLeftMotor.setPower(0);
-        robot.bottomRightMotor.setPower(0);
-
-        robot.topLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.topRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.bottomLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.bottomRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 
     public void driveByRatio(double maxDriveSpeed, double y, int trInchUnit) {
         double scale = 1 / (y + 1);
