@@ -1,16 +1,21 @@
 package org.firstinspires.ftc.teamcode.helper;
 
 public final class Constants {
+    public final class Drivetrain {
+        public final static double WHEEL_DIAMETER = 2.95275590552; // 75 mm in Inches (REV Mecanums)
+        public final static double COUNTS_PER_MOTOR_REVOLUTION = 766.106508876; // Ticks (Ultraplanetary HD Hex)
+        public final static double WHEEL_CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
+        public final static double COUNTS_PER_INCH = COUNTS_PER_MOTOR_REVOLUTION / WHEEL_CIRCUMFERENCE;
+
+        public static final double MINIMUM_TURNING_SPEED = 0.02; // Motor Power (RUN_USING_ENCODER)
+        public static final double TURNING_TOLERANCE = 1.0; // Angle
+    }
+
     public final static class Presets {
         public final static class Junctions {
             public static final int HIGH_A = 50;
             public static final int HIGH_B = -2710;
             public static final int HIGH_C = 107;
-
-            public static final int AUTO_HIGH_A = 72;
-            public static final int AUTO_HIGH_B = -2633;
-            public static final int AUTO_HIGH_C = 50;
-
 
             public static final int MID_A = 56;
             public static final int MID_B = -2146;

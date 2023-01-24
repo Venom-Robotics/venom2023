@@ -79,13 +79,13 @@ public class AutoLeft extends LinearOpMode
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
     // You will need to do your own calibration for other configurations!
-    double fx = 578.272;
-    double fy = 578.272;
-    double cx = 402.145;
-    double cy = 221.506;
+    double fx = 1430;
+    double fy = 1430;
+    double cx = 480;
+    double cy = 620;
 
     // UNITS ARE METERS
-    double tagsize = 0.166;
+    double tagsize = 0.04064;
 
     final int TAG_1 = 163; // Tag ID 63 from the 36h11 family
     final int TAG_2 = 164; // Tag ID 63 from the 36h11 family
@@ -124,7 +124,7 @@ public class AutoLeft extends LinearOpMode
             @Override
             public void onOpened()
             {
-                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override

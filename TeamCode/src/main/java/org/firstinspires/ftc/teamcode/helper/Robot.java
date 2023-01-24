@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.helper;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
+
+import org.openftc.apriltag.AprilTagDetection;
 
 import java.util.List;
 
@@ -13,24 +17,28 @@ import java.util.List;
  */
 public class Robot {
     // Declare Drivetrain members
-    public DcMotor topLeftMotor = null;
-    public DcMotor topRightMotor = null;
-    public DcMotor bottomLeftMotor = null;
-    public DcMotor bottomRightMotor = null;
+    public DcMotorEx topLeftMotor;
+    public DcMotorEx topRightMotor;
+    public DcMotorEx bottomLeftMotor;
+    public DcMotorEx bottomRightMotor;
+    public DcMotorEx[] driveMotors;
 
     // Declare Manipulator Motors
-    public DcMotorEx jointAMotor = null;
-    public DcMotorEx jointBMotor = null;
-    public DcMotorEx clawMotor = null;
+    public DcMotorEx jointAMotor;
+    public DcMotorEx jointBMotor;
+    public DcMotorEx clawMotor;
 
     // Declare Manipulator Servos
-    public CRServoImplEx clawServo = null;
-    public CRServoImplEx rotationServo = null;
+    public CRServoImplEx clawServo;
+    public CRServoImplEx rotationServo;
+    public ServoImplEx cameraServo;
 
-    public List<LynxModule> allHubs = null;
+    public List<LynxModule> allHubs;
+
+    public BNO055IMU imu; // Instantiate IMU
 
     // Create HardwareMap
-    HardwareMap hwMap = null;
+    HardwareMap hwMap;
 
     // Initialize standard Hardware interfaces
     public void init(HardwareMap _hardwareMap) {
@@ -38,10 +46,10 @@ public class Robot {
         hwMap = _hardwareMap;
 
         // Define and Initialize Motors
-        topLeftMotor = hwMap.get(DcMotor.class, "front_left_motor");
-        topRightMotor = hwMap.get(DcMotor.class, "front_right_motor");
-        bottomLeftMotor = hwMap.get(DcMotor.class, "back_left_motor");
-        bottomRightMotor = hwMap.get(DcMotor.class, "back_right_motor");
+        topLeftMotor = hwMap.get(DcMotorEx.class, "front_left_motor");
+        topRightMotor = hwMap.get(DcMotorEx.class, "front_right_motor");
+        bottomLeftMotor = hwMap.get(DcMotorEx.class, "back_left_motor");
+        bottomRightMotor = hwMap.get(DcMotorEx.class, "back_right_motor");
         jointAMotor = hwMap.get(DcMotorEx.class, "joint_a_motor");
         jointBMotor = hwMap.get(DcMotorEx.class, "joint_b_motor");
         clawMotor = hwMap.get(DcMotorEx.class, "claw_motor");
@@ -57,6 +65,7 @@ public class Robot {
         // Define and Initialize Servos
         clawServo = hwMap.get(CRServoImplEx.class, "claw_servo");
         rotationServo = hwMap.get(CRServoImplEx.class, "rotation_servo");
+        cameraServo = hwMap.get(ServoImplEx.class, "camera_servo");
 
         // Widen Servo Ranges
 //        clawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
@@ -102,5 +111,13 @@ public class Robot {
         jointAMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         jointBMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         clawMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Initialize IMU
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+        driveMotors = new DcMotorEx[]{topLeftMotor, topRightMotor, bottomLeftMotor, bottomRightMotor};
     }
 }

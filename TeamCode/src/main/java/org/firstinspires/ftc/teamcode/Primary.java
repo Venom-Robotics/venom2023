@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -49,6 +50,10 @@ public class Primary extends OpMode {
         // Initialize Robot
         robot.init(hardwareMap);
         runtime.reset();
+
+//        for (DcMotorEx motor : robot.driveMotors) {
+//            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        }
 
         // Initialize Telemetry
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
@@ -177,6 +182,9 @@ public class Primary extends OpMode {
                 "\n\t\tA: " + A_pos +
                 "\n\t\tB: " + B_pos +
                 "\n\t\tC: " + Claw_pos);
+        for (DcMotorEx motor : robot.driveMotors) {
+            telemetry.addData(motor.getDeviceName(), motor.getCurrentPosition());
+        }
     }
     //  telemetry.addLine("Run Time: " + runtime.toString());
 
